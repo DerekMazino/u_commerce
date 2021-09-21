@@ -10,10 +10,11 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'U-Commerce',
-      initialRoute: 'home',
+      initialRoute: 'login',
       routes: {
         'login': (_) => LoginScreen(),
-        'home': (_) => HomeScreen()
+        'home': (_) => HomeScreen(),
+        'product': (_) => ProductScreen()
       },
       theme: ThemeData.light().copyWith(
         scaffoldBackgroundColor: Colors.grey[350],
