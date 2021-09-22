@@ -12,9 +12,12 @@ class ProductImage extends StatelessWidget {
         width: double.infinity,
         height: 450,
         child: ClipRRect(
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(45), topRight: Radius.circular(45)),
           child: FadeInImage(
             image: NetworkImage('http://via.placeholder.com/400x300/green'),
-            placeholder: NetworkImage('http://via.placeholder.com/400x300/green'),
+            placeholder: AssetImage('assets/jar-loading.gif'),
+            fit: BoxFit.cover,
           ),
         ),
       ),
