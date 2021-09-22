@@ -16,6 +16,7 @@ class Product {
     String? image;
     String name;
     double price;
+    String? id;
 
     factory Product.fromJson(String str) => Product.fromMap(json.decode(str));
 
