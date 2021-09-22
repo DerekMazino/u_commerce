@@ -77,7 +77,6 @@ class _NotAvailable extends StatelessWidget {
 }
 
 class _PriceTag extends StatelessWidget {
-
   final double priceProduct;
 
   const _PriceTag(this.priceProduct);
@@ -117,11 +116,16 @@ class _BackgroundImage extends StatelessWidget {
       child: Container(
         width: double.infinity,
         height: 400,
-        child: FadeInImage(
-          placeholder: AssetImage('assets/jar-loading.gif'),
-          image: NetworkImage(urlImage!),
-          fit: BoxFit.cover,
-        ),
+        child: urlImage == null
+            ? Image(
+                image: AssetImage('assets/no-image.png'),
+                fit: BoxFit.cover,
+              )
+            : FadeInImage(
+                placeholder: AssetImage('assets/jar-loading.gif'),
+                image: NetworkImage(urlImage!),
+                fit: BoxFit.cover,
+              ),
       ),
     );
   }
