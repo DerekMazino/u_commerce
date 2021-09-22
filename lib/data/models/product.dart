@@ -4,12 +4,15 @@
 
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
+
 class Product {
     Product({
         required this.available,
         this.image,
         required this.name,
         required this.price,
+        this.id
     });
 
     bool available;
@@ -35,4 +38,12 @@ class Product {
         "name": name,
         "price": price,
     };
+
+    Product copy() => Product(
+      available: this.available, 
+      name: this.name, 
+      price: this.price,
+      image: this.image,
+      id: this.id  
+    );
 }

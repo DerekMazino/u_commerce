@@ -22,7 +22,10 @@ class HomeScreen extends StatelessWidget {
         itemCount: productServices.products.length,
         itemBuilder: (_, int index) => GestureDetector(
           child: ProductCard(product: productServices.products[index],),
-          onTap: () => Navigator.pushNamed(context, 'product'),
+          onTap: () {
+            productServices.selectedProduct = productServices.products[index].copy();
+            Navigator.pushNamed(context, 'product');
+          },
         )
       ),
       floatingActionButton: FloatingActionButton(

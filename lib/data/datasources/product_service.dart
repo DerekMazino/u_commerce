@@ -8,6 +8,8 @@ class ProductService extends ChangeNotifier{
   final String _baseUrl = 'flutter-u-commerce-default-rtdb.firebaseio.com';
   final List<Product> products = [];
   bool isLoading = true;
+  late Product selectedProduct;
+
 
   ProductService(){
     this.loadProducts();
