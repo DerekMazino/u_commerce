@@ -30,7 +30,7 @@ class ProductCard extends StatelessWidget {
               top: 0,
               right: 0,
             ),
-            if (product.available)
+            if (!product.available)
               Positioned(
                 child: _NotAvailable(),
                 top: 0,
