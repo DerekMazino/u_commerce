@@ -8,6 +8,7 @@ class ProductService extends ChangeNotifier{
   final String _baseUrl = 'flutter-u-commerce-default-rtdb.firebaseio.com';
   final List<Product> products = [];
   bool isLoading = true;
+  bool isSaving = false;
   late Product selectedProduct;
 
 
@@ -35,5 +36,32 @@ class ProductService extends ChangeNotifier{
     return this.products;
   }
 
+  Future saveOrCreateProduct(Product product) async{
+    isSaving = true;
+    notifyListeners();
+
+    if(product.id == null){
+      //Es necesario crear un producto
+    }else{
+      //actualizar
+      await this.updateProduct(product);
+    }
+
+    isSaving = false;
+    notifyListeners();
+  }
+
+  Future<String> updateProduct(Product product) async{
+    final url = Uri.https(_baseUrl, 'Products/${product.id}.json');
+    final resp = await http.put(url, body: product.toJson());
+    final decodeData = resp.body;
+    print(decodeData);
+
+    //Actualizar lista de productos
+    final index = this.products.indexWhere((element) => element.id == product.id);
+    this.products[index] = product;
+
+    return product.id!;
+  }
 
 }
