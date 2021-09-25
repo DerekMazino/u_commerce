@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:u_commerce/data/models/models.dart';
@@ -7,6 +8,8 @@ import 'package:http/http.dart' as http;
 class ProductService extends ChangeNotifier {
   final String _baseUrl = 'flutter-u-commerce-default-rtdb.firebaseio.com';
   final List<Product> products = [];
+
+  File? newPictureFile;
   bool isLoading = true;
   bool isSaving = false;
   late Product selectedProduct;
@@ -74,4 +77,11 @@ class ProductService extends ChangeNotifier {
 
     return product.id!;
   }
+
+  void updateSelectedProductImage(String path){
+    this.selectedProduct.image = path;
+    this.newPictureFile = File.fromUri(Uri(path: path));
+    notifyListeners();
+  }
+
 }
