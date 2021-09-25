@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:image_picker/image_picker.dart';
+
 import 'package:u_commerce/app/provider/product_form_provider.dart';
 import 'package:u_commerce/app/ui/input_decorations.dart';
 import 'package:u_commerce/app/widgets/widgets.dart';
@@ -29,7 +31,6 @@ class _ProductScreenBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     final productForm = Provider.of<ProductFormProvider>(context);
 
     return Scaffold(
@@ -56,8 +57,16 @@ class _ProductScreenBody extends StatelessWidget {
                     child: IconButton(
                       icon: Icon(Icons.camera_alt_outlined,
                           size: 40, color: Colors.white),
-                      onPressed: () {
-                        //TODO: galeria
+                      onPressed: () async {
+                        final imagePicket = new ImagePicker();
+                        final XFile? pickedFile = await imagePicket.pickImage(
+                            source: ImageSource.camera, imageQuality: 100);
+                        
+                        if(pickedFile==null){
+                          print('No seleccionó nada');
+                          return;
+                        }
+                        print('Tenemos imagen ${pickedFile.path}');
                       },
                     )),
               ],
@@ -72,10 +81,10 @@ class _ProductScreenBody extends StatelessWidget {
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.save),
-        onPressed: () async{
-          if(!productForm.isValidForm()) return;
+        onPressed: () async {
+          if (!productForm.isValidForm()) return;
           await productService.saveOrCreateProduct(productForm.product);
-
+          Navigator.pop(context);
         },
       ),
     );
