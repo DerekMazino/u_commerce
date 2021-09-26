@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:u_commerce/app/screens/screens.dart';
-import 'package:u_commerce/data/datasources/product_service.dart';
+import 'package:u_commerce/data/datasources/data_sources.dart';
+
 
  
 void main() => runApp(AppState());
@@ -14,6 +15,9 @@ class AppState extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(
           create: (_)=>ProductService()
+        ),
+        ChangeNotifierProvider(
+          create: (_)=>AuthService()
         )
       ],
       child: MyApp(),
@@ -30,6 +34,7 @@ class MyApp extends StatelessWidget {
       initialRoute: 'login',
       routes: {
         'login': (_) => LoginScreen(),
+        'registerUser': (_) => RegisterUserScreen(),
         'home': (_) => HomeScreen(),
         'product': (_) => ProductScreen()
       },
