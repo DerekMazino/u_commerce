@@ -4,6 +4,7 @@ import 'package:u_commerce/app/provider/login_form_provider.dart';
 
 import 'package:u_commerce/app/ui/input_decorations.dart';
 import 'package:u_commerce/app/widgets/widgets.dart';
+import 'package:u_commerce/data/datasources/data_sources.dart';
 
 class LoginScreen extends StatelessWidget {
   @override
@@ -74,10 +75,19 @@ class _LoginForm extends StatelessWidget {
               autocorrect: false,
               keyboardType: TextInputType.emailAddress,
               decoration: InputDecorations.authInputDecoration(
-                  hintText: 'example@gmail.com',
-                  labelText: 'Email',
-                  prefixIcon: Icons.email_outlined),
-              onChanged: (value) => loginForm.email,
+                  hintText: 'john.doe@gmail.com',
+                  labelText: 'Correo electrónico',
+                  prefixIcon: Icons.alternate_email_rounded),
+              onChanged: (value) => loginForm.email = value,
+              validator: (value) {
+                String pattern =
+                    r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+                RegExp regExp = new RegExp(pattern);
+
+                return regExp.hasMatch(value ?? '')
+                    ? null
+                    : 'El valor ingresado no luce como un correo';
+              },
             ),
             SizedBox(
               height: 30,
@@ -85,12 +95,17 @@ class _LoginForm extends StatelessWidget {
             TextFormField(
               autocorrect: false,
               obscureText: true,
-              keyboardType: TextInputType.visiblePassword,
+              keyboardType: TextInputType.emailAddress,
               decoration: InputDecorations.authInputDecoration(
-                  hintText: '*******',
+                  hintText: '*****',
                   labelText: 'Contraseña',
                   prefixIcon: Icons.lock_outline),
-              onChanged: (value) => loginForm.password,
+              onChanged: (value) => loginForm.password = value,
+              validator: (value) {
+                return (value != null && value.length >= 6)
+                    ? null
+                    : 'La contraseña debe de ser de 6 caracteres';
+              },
             ),
             SizedBox(
               height: 30,
@@ -113,12 +128,22 @@ class _LoginForm extends StatelessWidget {
                   ? null
                   : () async {
                       FocusScope.of(context).unfocus();
+
+                      final authService =
+                          Provider.of<AuthService>(context, listen: false);
+
                       if (!loginForm.isValidForm()) return;
                       loginForm.isLoading = true;
 
-                      await Future.delayed(Duration(seconds: 2));
-                      loginForm.isLoading = false;
-                      Navigator.pushReplacementNamed(context, 'home');
+                      final String? errorMessage = await authService.login(
+                          loginForm.email, loginForm.password);
+                      if (errorMessage == null) {
+                        Navigator.pushReplacementNamed(context, 'home');
+                      } else {
+                        //TODO: Monstrar error en pantalla
+                        print(errorMessage);
+                        loginForm.isLoading = false;
+                      }
                     },
             )
           ],
