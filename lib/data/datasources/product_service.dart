@@ -2,12 +2,15 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:u_commerce/data/models/models.dart';
 import 'package:http/http.dart' as http;
 
 class ProductService extends ChangeNotifier {
   final String _baseUrl = 'flutter-u-commerce-default-rtdb.firebaseio.com';
   final List<Product> products = [];
+
+  final storage = new FlutterSecureStorage();
 
   File? newPictureFile;
   bool isLoading = true;
@@ -22,7 +25,8 @@ class ProductService extends ChangeNotifier {
     this.isLoading = true;
     notifyListeners();
 
-    final url = Uri.https(_baseUrl, 'Products.json');
+    final url = Uri.https(_baseUrl, 'Products.json',
+        {'auth': await storage.read(key: 'token') ?? ''});
     final resp = await http.get(url);
     final Map<String, dynamic> productsMap = json.decode(resp.body);
 
@@ -54,7 +58,8 @@ class ProductService extends ChangeNotifier {
   }
 
   Future<String> updateProduct(Product product) async {
-    final url = Uri.https(_baseUrl, 'Products/${product.id}.json');
+    final url = Uri.https(_baseUrl, 'Products/${product.id}.json',
+        {'auth': await storage.read(key: 'token') ?? ''});
     final resp = await http.put(url, body: product.toJson());
     final decodeData = resp.body;
     print(decodeData);
@@ -93,13 +98,14 @@ class ProductService extends ChangeNotifier {
     final url = Uri.parse(
         'https://api.cloudinary.com/v1_1/dkuzaatx3/image/upload?upload_preset=ooxs5q6p');
     final imageUploadRequest = http.MultipartRequest('POST', url);
-    final file = await http.MultipartFile.fromPath('file', newPictureFile!.path); 
+    final file =
+        await http.MultipartFile.fromPath('file', newPictureFile!.path);
 
     imageUploadRequest.files.add(file);
 
     final streamResponse = await imageUploadRequest.send();
     final resp = await http.Response.fromStream(streamResponse);
-    if(resp.statusCode != 200 && resp.statusCode != 201){
+    if (resp.statusCode != 200 && resp.statusCode != 201) {
       print('Algo salió mal');
       print(resp.body);
       return null;
@@ -108,7 +114,6 @@ class ProductService extends ChangeNotifier {
     this.newPictureFile = null;
 
     final decodeData = json.decode(resp.body);
-    return  decodeData['secure_url'];
-    
+    return decodeData['secure_url'];
   }
 }

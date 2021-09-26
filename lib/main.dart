@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'U-Commerce',
-      initialRoute: 'checking',
+      initialRoute: 'login',
       routes: {
         'login': (_) => LoginScreen(),
         'registerUser': (_) => RegisterUserScreen(),
