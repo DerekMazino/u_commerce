@@ -73,7 +73,7 @@ class ProductService extends ChangeNotifier {
   }
 
   Future<String> createProduct(Product product) async {
-    final url = Uri.https( _baseUrl, 'products.json',{
+    final url = Uri.https( _baseUrl, 'Products.json',{
       'auth': await storage.read(key: 'token') ?? ''
     });
     
