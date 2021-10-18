@@ -25,8 +25,7 @@ class ProductService extends ChangeNotifier {
     this.isLoading = true;
     notifyListeners();
 
-    final url = Uri.https(_baseUrl, 'Products.json',
-        {'auth': await storage.read(key: 'token') ?? ''});
+    final url = Uri.https(_baseUrl, 'Products.json');
     final resp = await http.get(url);
     final Map<String, dynamic> productsMap = json.decode(resp.body);
 
@@ -58,8 +57,7 @@ class ProductService extends ChangeNotifier {
   }
 
   Future<String> updateProduct(Product product) async {
-    final url = Uri.https(_baseUrl, 'Products/${product.id}.json',
-        {'auth': await storage.read(key: 'token') ?? ''});
+    final url = Uri.https(_baseUrl, 'Products/${product.id}.json');
     final resp = await http.put(url, body: product.toJson());
     final decodeData = resp.body;
     print(decodeData);
@@ -73,17 +71,14 @@ class ProductService extends ChangeNotifier {
   }
 
   Future<String> createProduct(Product product) async {
-    final url = Uri.https( _baseUrl, 'Products.json',{
-      'auth': await storage.read(key: 'token') ?? ''
-    });
-    
-    final resp = await http.post( url, body: product.toJson() );
-    final decodedData = json.decode( resp.body );
+    final url = Uri.https(_baseUrl, 'Products.json');
+
+    final resp = await http.post(url, body: product.toJson());
+    final decodedData = json.decode(resp.body);
 
     product.id = decodedData['name'];
 
     this.products.add(product);
-    
 
     return product.id!;
   }

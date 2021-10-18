@@ -60,7 +60,7 @@ class _ProductScreenBody extends StatelessWidget {
                       onPressed: () async {
                         final imagePicket = new ImagePicker();
                         final XFile? pickedFile = await imagePicket.pickImage(
-                            source: ImageSource.camera, imageQuality: 100);
+                            source: ImageSource.gallery, imageQuality: 100);
 
                         if (pickedFile == null) {
                           print('No seleccionó nada');
@@ -128,6 +128,19 @@ class _ProductForm extends StatelessWidget {
                 },
                 decoration: InputDecorations.authInputDecoration(
                     hintText: 'Nombre del producto', labelText: 'Nombre: '),
+              ),
+              SizedBox(
+                height: 30,
+              ),
+              TextFormField(
+                initialValue: product.description,
+                onChanged: (value) => product.description = value,
+                validator: (value) {
+                  if (value == null || value.length < 1)
+                    return 'La descripcion es obligatoria';
+                },
+                decoration: InputDecorations.authInputDecoration(
+                    hintText: 'Descripcion', labelText: 'Descripcion: '),
               ),
               SizedBox(
                 height: 30,
